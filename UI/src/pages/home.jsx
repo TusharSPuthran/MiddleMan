@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Nav from '../components/Nav';
-import CustomCard from '../components/Card';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,7 +25,6 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <CustomCard token={token} products={products} />
     </>
   );
 }
