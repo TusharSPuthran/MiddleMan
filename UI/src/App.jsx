@@ -1,24 +1,27 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from './pages/LoginPage'
-import Home from './pages/home';
-import Profile from './pages/Profile';
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
+import VideoPage from './pages/VideoPage';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/login" element={<LoginPage />} />
-          <Route exact path="/profile" element={<Profile />} />
-        </Routes>
-      </BrowserRouter>
-    </>
-  )
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/videos/:id" element={<VideoPage />} />
+      </Routes>
+      <Footer />
+    </Router>
+  );
 }
 
-export default App
+export default App;

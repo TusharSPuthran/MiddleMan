@@ -1,23 +1,43 @@
-const express = require("express")
-const ConnectToMongo = require("./db")
-ConnectToMongo()
-const cors = require("cors")
-const app = express()
-app.use(express.json())
-app.use(cors())
-    
-const PORT = 7000
-app.use("/admin", require("./Routes/admin_routes"))
-app.use("/customer", require("./Routes/customer_routes"))
-app.use("/user", require("./Routes/user_routes"))
+const express = require('express');
+const ConnectToMongo = require('./db');
+const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
 
+// Initialize the Express app
+const app = express();
+ConnectToMongo();  // Connect to MongoDB
 
-app.use("/uploads/customer", express.static("./uploads/customer"))
-// app.use("/uploads/admin", express.static("./uploads/admin"))
-app.use("/uploads/category", express.static("./uploads/category"))
-app.use("/uploads/product", express.static("./uploads/product"))
+// Middleware
+app.use(express.json());
+app.use(cors());
 
+// Setup for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/videos/');  // Adjust the folder for video uploads
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + '-' + file.originalname);
+    }
+});
 
+const upload = multer({ storage: storage });
+
+// Routes
+const PORT = 7000;
+
+// Authentication routes
+app.use('/api/auth', require('./Routes/auth_routes'));  // Auth routes for register, login
+
+// Video collaboration routes
+app.use('/api/videos', require('./Routes/video_routes'));  // Video upload, review, approval
+
+// Static file serving
+app.use('/uploads/videos', express.static(path.join(__dirname, 'uploads/videos')));
+
+// Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on the port ${PORT}`)
-})
+    console.log(`Server is running on port ${PORT}`);
+});
